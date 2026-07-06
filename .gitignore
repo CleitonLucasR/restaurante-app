@@ -1,0 +1,24 @@
+# Dependências
+node_modules/
+**/node_modules/
+
+# Variáveis de ambiente (nunca commitar senhas/segredos!)
+.env
+**/.env
+
+# Build
+dist/
+build/
+**/dist/
+**/build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor
+.vscode/
+.DS_Store
+
+# Docker
+postgres-data/
