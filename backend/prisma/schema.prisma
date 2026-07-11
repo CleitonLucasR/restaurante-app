@@ -1,0 +1,176 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum StatusMesa{
+  LIVRE
+  OCUPADA
+}
+
+enum StatusComanda {
+  ABERTA
+  FECHADA
+}
+
+enum TipoMovimentacaoEstoque {
+  ENTRADA
+  SAIDA
+}
+
+enum PapelUsuario {
+  ADMIN
+  GARCOM
+}
+
+model Usuario {
+  id        String       @id @default(uuid())
+  nome      String 
+  email     String       @unique
+  sanhaHash String
+  papel     PapelUsuario @default(GARCOM)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  empresa Empresa @relation(fields: [empresaId], references: [id])
+  empresaId String
+
+  @@map("usuarios")
+}
+
+model Mesa{
+  id        String     @id @default(uuid())
+  numero    Int
+  status    StatusMesa @default(LIVRE)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  empresa Empresa @relation(fields: [empresaId], references: [id])
+  empresaId String
+
+  comandas Comanda[]
+
+  @@unique([empresaId, numero])
+  @@map("mesas")
+}
+
+model Empresa {
+  id        String   @id @default(uuid())
+  nome      String
+  cnpj      String   @unique
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  usuarios      Usuario[]
+  categorias    Categoria[]
+  produtos      Produto[]
+  mesas         Mesa[]
+  movimentacoes MovimentacaoEstoque[]
+
+  @@map("empresas")
+}
+
+model Categoria{
+  id        String @id @default(uuid())
+  nome      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  empresa Empresa @relation(fields: [empresaId], references: [id])
+  empresaId String
+
+  produtos Produto[]
+
+  @@map("categorias")
+}
+
+model Produto{
+  id                String   @id @default(uuid())
+  nome              String
+  preco             Decimal  @db.Decimal(10, 2)
+  descricao         String?
+  quantidadeEstoque Int      @default(0)
+  ativo             Boolean   @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  empresa Empresa @relation(fields: [empresaId], references: [id])
+  empresaId String
+
+  categoria Categoria @relation(fields: [categoriaId], references: [id])
+  categoriaId String
+
+  itensPedido ItemPedido[]
+  movimentacoes MovimentacaoEstoque[]
+
+  @@map("produtos")
+}
+
+model Comanda{
+  id String @id @default(uuid())
+  status StatusComanda @default(ABERTA)
+  dataAbertura DateTime @default(now())
+  dataFechamento DateTime?
+
+  mesa Mesa @relation(fields: [mesaId], references: [id])
+  mesaId String
+
+  pedidos Pedido[]
+
+  @@map("comandas")
+}
+
+model Pedido{
+  id        String   @id @default(uuid())
+  rodada    Int
+  createdAt DateTime @default(now())
+
+  comanda Comanda @relation(fields: [comandaId], references: [id])
+  comandaId String
+
+  itens ItemPedido[]
+
+  @@map("pedidos")
+}
+
+model ItemPedido{
+  id            String  @id @default(uuid())
+  quantidade    Int
+  precoUnitario Decimal @db.Decimal(10, 2)
+  observacao    String?
+
+  pedido Pedido @relation(fields: [pedidoId], references: [id])
+  pedidoId String
+
+  produto Produto @relation(fields: [produtoId], references: [id])
+  produtoId String 
+
+  @@map("itens_pedido")
+}
+
+model MovimentacaoEstoque{
+  id         String                   @id @default(uuid())
+  tipo       TipoMovimentacaoEstoque
+  quantidade Int
+  motivo     String?
+  createdAt  DateTime                 @default(now())
+
+  empresa   Empresa @relation(fields: [empresaId], references: [id])
+  empresaId String
+
+  produto   Produto @relation(fields: [produtoId], references: [id])
+  produtoId String
+
+  @@map("movimentacoes_estoque")
+}
+
+
