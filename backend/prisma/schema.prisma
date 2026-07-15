@@ -35,7 +35,7 @@ model Usuario {
   id        String       @id @default(uuid())
   nome      String 
   email     String       @unique
-  sanhaHash String
+  senhaHash String
   papel     PapelUsuario @default(GARCOM)
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
