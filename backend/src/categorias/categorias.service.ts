@@ -8,9 +8,12 @@ import { UpdateCategoriaDto } from './dto/update-categoria.dto';
 export class CategoriasService {
   constructor(private readonly prisma: PrismaService) {}
 
-  create(createCategoriaDto: CreateCategoriaDto) {
+  create(createCategoriaDto: CreateCategoriaDto, empresaId: string) {
     return this.prisma.categoria.create({
-      data: createCategoriaDto,
+      data: {
+        ...createCategoriaDto,
+        empresaId,
+      }
     });
   }
 

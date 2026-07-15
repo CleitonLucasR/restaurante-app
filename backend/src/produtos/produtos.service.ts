@@ -8,11 +8,14 @@ import { UpdateProdutoDto } from './dto/update-produto.dto';
 export class ProdutosService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(createProdutoDto: CreateProdutoDto) {
+  async create(createProdutoDto: CreateProdutoDto, empresaId: string) {
     await this.validarCategoriaExiste(createProdutoDto.categoriaId);
 
     return this.prisma.produto.create({
-      data: createProdutoDto
+      data: {
+        ...createProdutoDto,
+        empresaId
+      }
     })
   }
 

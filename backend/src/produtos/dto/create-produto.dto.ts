@@ -23,8 +23,5 @@ export class CreateProdutoDto {
     ativo?: boolean;
 
     @IsUUID()
-    empresaId!: string;
-
-    @IsUUID()
     categoriaId!: string;
 }
