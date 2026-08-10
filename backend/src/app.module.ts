@@ -10,9 +10,10 @@ import { ComandasModule } from './comandas/comandas.module';
 import { PedidosModule } from './pedidos/pedidos.module';
 import { EstoqueModule } from './estoque/estoque.module';
 import { RelatoriosModule } from './relatorios/relatorios.module';
+import { ConfiguracoesModule } from './configuracoes/configuracoes.module';
 
 @Module({
-  imports: [PrismaModule, CategoriasModule, ProdutosModule, AuthModule, MesasModule, ComandasModule, PedidosModule, EstoqueModule, RelatoriosModule],
+  imports: [PrismaModule, CategoriasModule, ProdutosModule, AuthModule, MesasModule, ComandasModule, PedidosModule, EstoqueModule, RelatoriosModule, ConfiguracoesModule],
   controllers: [AppController],
   providers: [AppService],
 })
