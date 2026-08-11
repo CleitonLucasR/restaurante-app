@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const api = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 api.interceptors.request.use((config) => {
@@ -15,10 +15,14 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const isAuthEndpoint = error.config?.url?.includes('/auth/');
+
+    if (error.response?.status === 401 && !isAuthEndpoint) {
       localStorage.removeItem('accessToken');
+      localStorage.removeItem('usuario');
       window.location.href = '/login';
     }
+
     return Promise.reject(error);
   },
 );
