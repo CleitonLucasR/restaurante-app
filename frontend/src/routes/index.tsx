@@ -6,6 +6,8 @@ import { Layout } from '@/components/Layout';
 import { useAuthStore } from '@/store/authStore';
 import { CategoriasPage } from '@/pages/CategoriasPage';
 import { ProdutosPage } from '@/pages/ProdutosPage';
+import { EstoquePage } from '@/pages/EstoquePage';
+import { RelatoriosPage } from '@/pages/RelatoriosPage';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -28,6 +30,8 @@ export function AppRoutes() {
           <Route path="/comandas/:id" element={<ComandaPage />} />
           <Route path="/categorias" element={<CategoriasPage />} />
           <Route path="/produtos" element={<ProdutosPage />} />
+          <Route path="/estoque" element={<EstoquePage />} />
+          <Route path="/relatorios" element={<RelatoriosPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
