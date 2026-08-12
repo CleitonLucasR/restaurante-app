@@ -1,6 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthPage } from '../pages/AuthPage';
-import { useAuthStore } from '../store/authStore';
+import { AuthPage } from '@/pages/AuthPage';
+import { HomePage } from '@/pages/HomePage';
+import { ComandaPage } from '@/pages/ComandaPage';
+import { Layout } from '@/components/Layout';
+import { useAuthStore } from '@/store/authStore';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -13,15 +16,15 @@ export function AppRoutes() {
       <Routes>
         <Route path="/login" element={<AuthPage />} />
         <Route
-          path="/"
           element={
             <PrivateRoute>
-              <div className="p-8">
-                <h1 className="font-display text-2xl">Home (em construção)</h1>
-              </div>
+              <Layout />
             </PrivateRoute>
           }
-        />
+        >
+          <Route path="/" element={<HomePage />} />
+          <Route path="/comandas/:id" element={<ComandaPage />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
